@@ -25,14 +25,20 @@ object TwoSizedNumberSubset extends App {
 object BonusTwoSizedNumberSubset extends App {
 
   def two_sum(input: Array[Int], k: Int): Boolean = {
-    val sortedInput = input.sorted
-
-    for (i <- sortedInput) {
-      if (find(sortedInput.tail, k - i)) {
-        return true
-      }
+    if (input.isEmpty) {
+      return false
     }
-    false
+
+    @tailrec
+    def iterate(head: Int, tail: Array[Int]): Boolean =
+      tail match {
+        case Array() => false
+        case nums if find(nums.tail, k - head) => true
+        case nums => iterate(nums.head, nums.tail)
+      }
+
+    val sortedInput = input.sorted
+    iterate(sortedInput.head, sortedInput.tail)
   }
 
   @tailrec

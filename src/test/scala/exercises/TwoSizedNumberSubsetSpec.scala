@@ -36,5 +36,6 @@ class TwoSizedNumberSubsetSpec(implicit ee: ExecutionEnv) extends Specification 
     BonusTwoSizedNumberSubset.two_sum(Array(), 5) must beFalse
     BonusTwoSizedNumberSubset.two_sum(Array(4), 4) must beFalse
     BonusTwoSizedNumberSubset.two_sum(Array(4, 7, 1, -3, 2), -10) must beFalse
+    BonusTwoSizedNumberSubset.two_sum(Array(1, 5), 10) must beFalse
   }
 }
