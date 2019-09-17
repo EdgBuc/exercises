@@ -7,14 +7,11 @@ object SubsetsSums extends App {
   def calculateSums(data: List[Int]): Set[Int] = {
 
     @tailrec
-    def calculate(head: Int, tail: List[Int], calculated: Set[Int]): Set[Int] = {
-      val newValues = calculated.map(_ + head)
-      val values = calculated ++ newValues + head
-
-      if (tail.isEmpty) {
-        values
-      } else {
-        calculate(tail.head, tail.tail, values)
+    def calculate(head: Int, numbersToUse: List[Int], calculated: Set[Int]): Set[Int] = {
+      val recalculatedValues = calculated ++ calculated.map(_ + head) + head
+      numbersToUse match {
+        case Nil => recalculatedValues
+        case head :: tail => calculate(head, tail, recalculatedValues)
       }
     }
 
