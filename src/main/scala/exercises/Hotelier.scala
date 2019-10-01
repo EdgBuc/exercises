@@ -74,6 +74,6 @@ object SuperMegaHotelier extends App {
   })
 
   private val en: Long = System.currentTimeMillis()
-  println("Time taken: ${en - st}")
+  println(s"Time taken: ${en - st}")
   println(result.mkString(""))
 }
