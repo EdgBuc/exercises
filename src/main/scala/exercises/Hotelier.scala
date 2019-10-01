@@ -1,13 +1,14 @@
 package exercises
 
 import java.util.Comparator
+
 import com.google.common.collect.TreeMultiset
-import org.apache.commons.lang3.math.NumberUtils
+
 import scala.annotation.tailrec
+import scala.io.Source
 import scala.jdk.CollectionConverters._
 import scala.math._
 import scala.util.Using
-import scala.io.Source
 
 
 object Hotelier extends App {
@@ -62,7 +63,7 @@ object SuperMegaHotelier extends App {
     event match {
       case "L" => positions.pollFirstEntry()
       case "R" => positions.pollLastEntry()
-      case d if NumberUtils.isParsable(d) => positions.add(d.toInt)
+      case d => positions.add(d.toInt)
     }
   }
 
@@ -73,5 +74,5 @@ object SuperMegaHotelier extends App {
 
   private val en: Long = System.currentTimeMillis()
   println(s"Time taken: ${en - st}")
-  println(result.mkString(""))
+//  println(result.mkString(""))
 }
