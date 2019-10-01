@@ -1,8 +1,7 @@
 package exercises
 
+import java.util
 import java.util.Comparator
-
-import com.google.common.collect.TreeMultiset
 
 import scala.annotation.tailrec
 import scala.io.Source
@@ -54,15 +53,15 @@ object SuperMegaHotelier extends App {
   )
 
   val ascComp: Comparator[Int] = (o1: Int, o2: Int) => o1 - o2
-  val positions = TreeMultiset.create(ascComp)
+  val positions = new util.TreeSet[Int](ascComp)
   positions.addAll((0 until totalRooms).toList.asJava)
 
   private val st: Long = System.currentTimeMillis()
 
   for (event <- inputArray) {
     event match {
-      case "L" => positions.pollFirstEntry()
-      case "R" => positions.pollLastEntry()
+      case "L" => positions.pollFirst()
+      case "R" => positions.pollLast()
       case d => positions.add(d.toInt)
     }
   }
@@ -74,5 +73,5 @@ object SuperMegaHotelier extends App {
 
   private val en: Long = System.currentTimeMillis()
   println(s"Time taken: ${en - st}")
-//  println(result.mkString(""))
+  //  println(result.mkString(""))
 }
