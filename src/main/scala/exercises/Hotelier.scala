@@ -45,7 +45,6 @@ object Hotelier extends App {
 
 
 object SuperMegaHotelier extends App {
-
   val totalRooms = 1000000
   var inputArray: Array[String] = Array.empty
 
@@ -53,10 +52,9 @@ object SuperMegaHotelier extends App {
     inputArray = bufferedSource.getLines.toArray
   )
 
-  val ascComp: Comparator[Int] = (o1, o2) => o1 - o2
-  private val positions = TreeMultiset.create(ascComp)
-  private val list: List[Int] = (0 until totalRooms).toList
-  positions.addAll(list.asJava)
+  val ascComp: Comparator[Int] = (o1: Int, o2: Int) => o1 - o2
+  val positions = TreeMultiset.create(ascComp)
+  positions.addAll((0 until totalRooms).toList.asJava)
 
   private val st: Long = System.currentTimeMillis()
 
@@ -68,7 +66,7 @@ object SuperMegaHotelier extends App {
     }
   }
 
-  private val result: Array[Int] = Array.fill(totalRooms)(1)
+  val result: Array[Int] = Array.fill(totalRooms)(1)
   positions.forEach(p => {
     result(p) = 0
   })
