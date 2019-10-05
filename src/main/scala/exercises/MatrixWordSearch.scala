@@ -20,60 +20,31 @@ object MatrixWordSearch extends App {
     bufferedSource => bufferedSource.getLines.toArray.map(_.toCharArray)
   ).get
 
+  private val rotatedMatrix: Array[Array[Char]] = Array.ofDim(matrix.length, matrix(0).length)
   val start = System.currentTimeMillis()
 
-  val expectedWithIndex: Array[(Char, Int)] = expectedWord.toCharArray.zipWithIndex
-  val indexedMatrix1D = matrix.flatten.zipWithIndex
-
-  val coordinatesOfMaybeWordStart = indexedMatrix1D.filter {
-    case (letter, idx) =>
-      val (row, col) = coordinatesInMatrix(idx)
-      (willFitHorizontally(row, col) || willFitVertically(row, col)) && letter == expectedWord.head
-  }.map {
-    case (_, idx) => coordinatesInMatrix(idx)
+  for (i <- matrix.indices) {
+    for (j <- i until matrix(i).length) {
+      rotatedMatrix(j)(i) = matrix(i)(j);
+      rotatedMatrix(i)(j) = matrix(j)(i);
+    }
   }
 
-  val result: Boolean = coordinatesOfMaybeWordStart.exists { case (row, col) => isWordHere(row, col) }
+  val result = matrixContainsStringInRow(matrix) || matrixContainsStringInRow(rotatedMatrix)
 
   val end = System.currentTimeMillis()
   println(s"Took ${end - start} ms with result: ${result}")
 
-  def willFitHorizontally(row: Int, col: Int) = col + expectedWord.length <= matrix(row).length
-
-  def willFitVertically(row: Int, col: Int) = row + expectedWord.length <= matrix.length
-
-  def isWordHere(row: Int, col: Int): Boolean = {
-    isWordVertical(row, col) || isWordHorizontal(row, col)
-  }
-
-  def isWordVertical(row: Int, col: Int): Boolean = {
-    if (row + expectedWord.length <= matrix.length) {
-      wordMatch(matrix(_)(col))
-    } else {
-      false
-    }
-  }
-
-  def isWordHorizontal(row: Int, col: Int): Boolean = {
-    if (col + expectedWord.length <= matrix(row).length) {
-      wordMatch(matrix(row)(_))
-    } else {
-      false
-    }
-  }
-
-  def coordinatesInMatrix(idx: Int): (Int, Int) = {
-    val row = idx / matrix(0).length
-    val col = idx - row * matrix(0).length
-    (row, col)
-  }
-
-  def wordMatch(actualChar: Int => Char): Boolean = {
-    for ((letter, i) <- expectedWithIndex) {
-      if (actualChar(i) != letter) {
-        return false
+  def matrixContainsStringInRow(mx: Array[Array[Char]]): Boolean = {
+    for (row <- mx) {
+      if (containsString(row)) {
+        return true
       }
     }
-    true
+    false
+  }
+
+  def containsString(array: Array[Char]): Boolean = {
+    array.mkString.indexOfSlice(expectedWord) != -1
   }
 }
