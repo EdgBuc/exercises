@@ -52,22 +52,14 @@ object StringDecoding extends App {
   )
 
   private val fromLongestKeys: List[String] =
-    rules.keys.toList.sortBy(key => rules.count(kv => kv._2.equals(rules(key))))//(Ordering[Int].reverse)
+    rules.keys.toList.sortBy(key => rules.count(kv => kv._2.equals(rules(key))))
 
-//  for (key <- fromLongestKeys) {
-//    println(s"$key ${rules.count(kv => kv._2.equals(rules(key)))}")
-//  }
-  //CRnSiRnFYCaRnFArArFArAl
-  //CRnSiRnFYCaRnFArArFArAl
-//  println(rules.count(v => v._2 == "P"))
   println(fromLongestKeys.head)
   decode(fromLongestKeys.head, fromLongestKeys.tail)
   println(result)
 
   def decode(key: String, otherKeys: List[String]): Unit = {
     val occurencies = countSubstring(given, key)
-    //    println(s"$key - $occurencies")
-
     if (occurencies > 0) {
       result += occurencies;
       given = given.replace(key, rules(key))
