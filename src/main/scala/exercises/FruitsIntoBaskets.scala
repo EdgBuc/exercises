@@ -17,8 +17,30 @@ object FruitsIntoBaskets {
    * @return
    */
 
-  //Solution 1, without using mutations
-  def apply(input: Array[Char]): Int = input.foldLeft((0, 0, 0, 0, 0)) { (acc, cursor) =>
+  // Solution 1, short one
+  def apply(input: Array[Char]): Int = {
+    if (input.length < 3) {
+      return input.length
+    }
+    var windowStart = 0;
+    var secondFruitPointer = 1;
+    var maxAmount = 0;
+
+    for (windowEnd <- 2 until input.length) {
+      if (input(windowStart) == input(secondFruitPointer)) {
+        secondFruitPointer = windowEnd
+      } else if (input(windowStart) != input(windowEnd) && input(secondFruitPointer) != input(windowEnd)) {
+        windowStart = windowEnd-1
+        secondFruitPointer = windowEnd
+      } else {
+        maxAmount = Math.max(maxAmount, windowEnd - windowStart+1)
+      }
+    }
+    maxAmount
+  }
+
+  //Solution 2, without using mutations
+  def apply2(input: Array[Char]): Int = input.foldLeft((0, 0, 0, 0, 0)) { (acc, cursor) =>
     val (basket1Value, basket2Value, maxAmount, counter, previous) = acc
     if (basket1Value == 0) {
       (cursor, basket2Value, Math.max(maxAmount, counter + 1), counter + 1, cursor)
@@ -30,31 +52,4 @@ object FruitsIntoBaskets {
       (basket1Value, basket2Value, Math.max(maxAmount, counter + 1), counter + 1, cursor)
     }
   }._3
-
- // Solution 2, basic as is
-  def apply2(input: Array[Char]): Int = {
-    var basket1Value = 0;
-    var basket2Value = 0;
-    var maxAmount = 0;
-    var counter = 0;
-
-    for (i <- input.indices) {
-      val cursor = input(i)
-      if (basket1Value == 0) {
-        basket1Value = cursor
-      } else if (basket1Value != cursor && basket2Value == 0) {
-        basket2Value = cursor
-      } else if (basket1Value != cursor && basket2Value != cursor) {
-        basket1Value = input(i - 1)
-        basket2Value = cursor
-        counter = 1
-      }
-
-      if (basket1Value == cursor || basket2Value == cursor) {
-        counter += 1
-        maxAmount = Math.max(maxAmount, counter)
-      }
-    }
-    maxAmount
-  }
 }
