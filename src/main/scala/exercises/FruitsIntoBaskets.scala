@@ -22,34 +22,39 @@ object FruitsIntoBaskets {
     if (input.length < 3) {
       return input.length
     }
-    var windowStart = 0;
-    var secondFruitPointer = 1;
-    var maxAmount = 0;
 
-    for (windowEnd <- 2 until input.length) {
-      if (input(windowStart) == input(secondFruitPointer)) {
-        secondFruitPointer = windowEnd
-      } else if (input(windowStart) != input(windowEnd) && input(secondFruitPointer) != input(windowEnd)) {
-        windowStart = windowEnd-1
-        secondFruitPointer = windowEnd
+    var basket1 = input(0)
+    var basket2: Option[Char] = None
+    var currBasketSize = 1
+    var maxBasketSize = 0
+    var closestTree = basket1
+    var closestTreeIdx = 0
+
+    def updateClosestTree(i: Int, tree: Char): Unit = {
+      if (tree != closestTree) {
+        closestTree = tree
+        closestTreeIdx = i
+      }
+      currBasketSize += 1
+    }
+
+    for (i <- 1 until input.length) {
+      val fruitType = input(i)
+      if (basket1 == fruitType) {
+        updateClosestTree(i, fruitType)
+      } else if (basket2.isEmpty || basket2.contains(fruitType)) {
+        basket2 = Some(fruitType)
+        updateClosestTree(i, fruitType)
       } else {
-        maxAmount = Math.max(maxAmount, windowEnd - windowStart+1)
+        maxBasketSize = Math.max(currBasketSize, maxBasketSize)
+        basket1 = closestTree
+        basket2 = Some(fruitType)
+        currBasketSize = (i - closestTreeIdx) + 1
+        closestTree = fruitType
+        closestTreeIdx = i
       }
     }
-    maxAmount
-  }
 
-  //Solution 2, without using mutations
-  def apply2(input: Array[Char]): Int = input.foldLeft((0, 0, 0, 0, 0)) { (acc, cursor) =>
-    val (basket1Value, basket2Value, maxAmount, counter, previous) = acc
-    if (basket1Value == 0) {
-      (cursor, basket2Value, Math.max(maxAmount, counter + 1), counter + 1, cursor)
-    } else if (basket1Value != cursor && basket2Value == 0) {
-      (basket1Value, cursor, Math.max(maxAmount, counter + 1), counter + 1, cursor)
-    } else if (basket1Value != cursor && basket2Value != cursor) {
-      (previous, cursor, Math.max(maxAmount, 2), 2, cursor)
-    } else {
-      (basket1Value, basket2Value, Math.max(maxAmount, counter + 1), counter + 1, cursor)
-    }
-  }._3
+    Math.max(currBasketSize, maxBasketSize)
+  }
 }
