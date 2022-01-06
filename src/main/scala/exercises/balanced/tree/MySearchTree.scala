@@ -135,46 +135,40 @@ object MySearchTree {
   }
 
   def rotateLeft(n: MySearchTree): Unit = {
-    val tmp = n.right.get
-    tmp.parent = n.parent
-    n.parent match {
-      case Some(parent) =>
-        if (parent.left.contains(n)) {
-          parent.left = Some(tmp)
-        } else {
-          parent.right = Some(tmp)
-        }
-      case _ => //do nothing
-    }
-    n.right = tmp.left
-    tmp.left match {
+    val newNode = n.right.get
+    moveToOppositeSide(n, newNode)
+    n.right = newNode.left
+    newNode.left match {
       case Some(left) => left.parent = Some(n)
       case _ => //do nothing
     }
-
-    n.parent = Some(tmp)
-    tmp.left = Some(n)
+    n.parent = Some(newNode)
+    newNode.left = Some(n)
   }
 
   def rotateRight(n: MySearchTree): Unit = {
-    val tmp = n.left.get
-    tmp.parent = n.parent
-    n.parent match {
-      case Some(parent) =>
-        if (parent.left.contains(n)) {
-          parent.left = Some(tmp)
-        } else {
-          parent.right = Some(tmp)
-        }
-      case _ => //do nothing
-    }
-    n.left = tmp.right
-    tmp.right match {
+    val newNode = n.left.get
+    moveToOppositeSide(n, newNode)
+    n.left = newNode.right
+    newNode.right match {
       case Some(right) => right.parent = Some(n)
       case _ => //do nothing
     }
-    n.parent = Some(tmp)
-    tmp.right = Some(n)
+    n.parent = Some(newNode)
+    newNode.right = Some(n)
+  }
+
+  private def moveToOppositeSide(n: MySearchTree, newNode: MySearchTree): Unit = {
+    newNode.parent = n.parent
+    n.parent match {
+      case Some(parent) =>
+        if (parent.left.contains(n)) {
+          parent.left = Some(newNode)
+        } else {
+          parent.right = Some(newNode)
+        }
+      case _ => //do nothing
+    }
   }
 
   private def uncle(parent: MySearchTree): Option[MySearchTree] = {
