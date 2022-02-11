@@ -12,14 +12,14 @@ object SafeStates {
     The answer should be sorted in ascending order.
   */
   def safe(firstTransition: (Int, Int), transitions: (Int, Int)*): Option[Seq[Int]] = {
-    val referencesMap = (firstTransition :: List.from(transitions)).foldLeft(Map.empty[Int, Set[Int]]) {
+    val referencesMap = (firstTransition :: List.from(transitions)).foldLeft(Map.empty[Int, List[Int]]) {
       case (map, tran) =>
-        val references = map.getOrElse(tran._2, Set.empty) + tran._1
+        val references = tran._1 :: map.getOrElse(tran._2, List.empty)
         val updatedMap = map + (tran._2 -> references)
         if (updatedMap.contains(tran._1)) {
           updatedMap
         } else {
-          updatedMap + (tran._1 -> Set.empty)
+          updatedMap + (tran._1 -> List.empty)
         }
     }
 
@@ -44,7 +44,7 @@ object SafeStates {
     }
   }
 
-  def sort(referencedByMap: Map[Int, Set[Int]], referencesAmountMap: Map[Int, Int]): Seq[Int] = {
+  def sort(referencedByMap: Map[Int, List[Int]], referencesAmountMap: Map[Int, Int]): Seq[Int] = {
     val terminalNodes = referencesAmountMap.filter(elm => elm._2 == 0).keys
     if (terminalNodes.isEmpty) {
       Seq.empty
