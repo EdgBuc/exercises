@@ -44,10 +44,10 @@ object SafeStates {
     }
   }
 
-  def sort(referencedByMap: Map[Int, List[Int]], referencesAmountMap: Map[Int, Int]): Seq[Int] = {
-    val terminalNodes = referencesAmountMap.filter(elm => elm._2 == 0).keys
+  def sort(referencedByMap: Map[Int, List[Int]], referencesAmountMap: Map[Int, Int]): List[Int] = {
+    val terminalNodes = referencesAmountMap.filter(elm => elm._2 == 0).keys.toList
     if (terminalNodes.isEmpty) {
-      Seq.empty
+      List.empty
     } else {
       val updatedReferencesAmountMap = terminalNodes
         .flatMap(node => referencedByMap.getOrElse(node, Set.empty))
@@ -56,7 +56,7 @@ object SafeStates {
       val cleanMaps = terminalNodes.foldLeft((referencedByMap, updatedReferencesAmountMap)) {
         case ((refMap, refAmountMap), node) => (refMap - node, refAmountMap - node)
       }
-      sort(cleanMaps._1, cleanMaps._2) :++ terminalNodes.toList
+      sort(cleanMaps._1, cleanMaps._2) ::: terminalNodes
     }
   }
 
