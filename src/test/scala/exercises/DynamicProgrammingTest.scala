@@ -24,8 +24,7 @@ class DynamicProgrammingTest extends SpecWithJUnit {
     expectedResult =
       """ A
         | B
-        | C
-        | """.stripMargin,
+        | C""".stripMargin,
   )
 
   test("identical files with empty final line")(
